@@ -1,0 +1,15 @@
+const {test, expect} = require("@playwright/test");
+
+test.only("Day 01: Facebook login page -> location finding and login", async function({browser}){
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://www.facebook.com/");
+    console.log(await page.title());
+    await expect(page).toHaveTitle('Facebook – log in or sign up');
+    await page.locator("#email").fill('alexjoyel2001@gmail.com');
+    await page.locator("#pass").fill("alexjoyel@23");
+    await page.locator("[name='login']").click();
+    await page.waitForNavigation({ waitUntil: 'domcontentloaded'}) // Wait for the next page to load
+
+    await browser.close();
+});

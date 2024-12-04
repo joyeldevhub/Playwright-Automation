@@ -1,0 +1,22 @@
+const {test, expect} = require("@playwright/test");
+
+
+test.only("First test", async function({browser}){
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const username = page.locator("#username");
+    const signin = page.locator("#signInBtn");
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    console.log(await page.title());
+    await username.fill("rahulshetty");
+    await page.locator("[type='password']").fill("learning");
+    await signin.click();
+    // Now, want to correct the username and try to sign-in
+    await username.fill("rahulshettyacademy");
+    await signin.click();
+    console.log(await page.locator(".card-title a").first().textContent());
+    console.log(await page.locator(".card-title a").nth(1).textContent());
+    const ProductTitles = await page.locator(".card-title a").allTextContents();
+    console.log(ProductTitles);
+    console.log("Third Product Title: " + ProductTitles.at(2));
+});

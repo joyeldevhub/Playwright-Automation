@@ -1,0 +1,125 @@
+const {test, expect} = require('@playwright/test');
+
+
+test.only("Test the website", async function({browser}){
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://rahulshettyacademy.com/client");
+    console.log(await page.title());
+    await page.locator("[type='email']").fill("alexjoyel2001@gmail.com");
+    await page.locator("[type='password']").fill("Alexjoyel@23");
+    await page.locator("[type='submit']").click();
+    if(expect(page).toHaveURL("https://rahulshettyacademy.com/client/dashboard/dash")){
+        console.log("Correct URL");
+    }
+    else{
+        console.log("Wrong");
+    }
+    await page.locator(".card-body b").first().waitFor();
+    const titles = await page.locator(".card-body b").allTextContents();
+    console.log(titles);
+
+
+
+});
+
+
+Explanation:
+
+Here’s a step-by-step breakdown of the provided Playwright test script:
+
+1. Import Required Modules:
+```javascript
+const {test, expect} = require('@playwright/test');
+```
+This imports the `test` and `expect` modules from Playwright.  
+- `test`: Used to define test cases.
+- `expect`: Used for assertions in tests to validate conditions.
+
+---
+
+2. Define the Test Case:
+
+```javascript
+test.only("Test the website", async function({browser}) {
+```
+- `test.only`: Ensures this specific test runs, skipping all other tests. This is useful during debugging.
+- `"Test the website"`: The name of the test case.
+- `async function({browser})`: Defines an asynchronous function with `browser` passed as a parameter, allowing the use of browser-related actions.
+
+---
+
+3. Create a New Context and Page:
+
+```javascript
+const context = await browser.newContext();
+const page = await context.newPage();
+```
+- `browser.newContext()`: Creates a new browser context, isolating the session (cookies, cache).
+- `context.newPage()`: Opens a new tab in the created browser context.
+
+---
+
+4. Navigate to the Website:
+
+```javascript
+await page.goto("https://rahulshettyacademy.com/client");
+console.log(await page.title());
+```
+- `page.goto()`: Navigates to the specified URL.
+- `page.title()`: Retrieves the title of the page, logged using `console.log`.
+
+---
+
+5. Fill in the Login Form:
+
+```javascript
+await page.locator("[type='email']").fill("alexjoyel2001@gmail.com");
+await page.locator("[type='password']").fill("Alexjoyel@23");
+await page.locator("[type='submit']").click();
+```
+- `page.locator()`: Selects elements on the page using a CSS selector.
+- `.fill()`: Fills in the provided value into the selected input fields (email and password).
+- `.click()`: Clicks the login button.
+
+---
+
+6. Verify the URL After Login:
+
+```javascript
+if(expect(page).toHaveURL("https://rahulshettyacademy.com/client/dashboard/dash")){
+    console.log("Correct URL");
+} else {
+    console.log("Wrong");
+}
+```
+- `expect(page).toHaveURL()`: Checks if the page URL matches the expected URL.
+- Issue: The `expect` statement does not return a value. Instead, assertions throw errors if the condition fails. This should be fixed as follows:
+  ```javascript
+  await expect(page).toHaveURL("https://rahulshettyacademy.com/client/dashboard/dash");
+  console.log("Correct URL");
+  ```
+
+---
+
+7. Wait for Elements and Retrieve Titles:
+
+```javascript
+await page.locator(".card-body b").first().waitFor();
+const titles = await page.locator(".card-body b").allTextContents();
+console.log(titles);
+```
+
+- `.first().waitFor()`: Waits for the first element matching the selector `.card-body b` to be available in the DOM.
+- `.allTextContents()`: Retrieves the text content of all elements matching the selector `.card-body b` as an array.
+- `console.log(titles)`: Prints the array of product titles (or other content) to the console.
+
+---
+
+8. Closing Notes:
+
+This script:
+1. Logs into the website.
+2. Verifies the URL post-login.
+3. Extracts and logs the titles of items/cards displayed on the page.
+

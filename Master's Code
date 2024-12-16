@@ -1,0 +1,118 @@
+const { test, expect } = require('@playwright/test');
+ 
+ 
+ 
+ 
+test('@Web Client App login', async ({ page }) => {
+   //js file- Login js, DashboardPage
+   const email = "anshika@gmail.com";
+   const productName = 'zara coat 3';
+   const products = page.locator(".card-body");
+   await page.goto("https://rahulshettyacademy.com/client");
+   await page.locator("#userEmail").fill(email);
+   await page.locator("#userPassword").type("Iamking@000");
+   await page.locator("[value='Login']").click();
+   await page.waitForLoadState('networkidle');
+   await page.locator(".card-body b").first().waitFor();
+   const titles = await page.locator(".card-body b").allTextContents();
+   console.log(titles); 
+ 
+});
+
+=> Let's break it down step by step: <=
+
+---
+
+1. Importing Playwright Test Module:
+
+```javascript
+const { test, expect } = require('@playwright/test');
+```
+- **`test`**: Provides a test environment where you can define and run test cases.
+- **`expect`**: Used for assertions (though not utilized in this snippet yet).
+
+---
+
+2. Defining the Test:
+
+```javascript
+test('@Web Client App login', async ({ page }) => {
+```
+- Test Title: `@Web Client App login` - A descriptive name for the test.
+- `async ({ page })`: The test receives a `page` object, representing a browser page where actions like navigation and interaction happen.
+
+---
+
+3. Setting Variables:
+
+```javascript
+const email = "anshika@gmail.com";
+const productName = 'zara coat 3';
+const products = page.locator(".card-body");
+```
+- `email`: The email ID used for login.
+- `productName`: A string for identifying a product on the page (not yet used in the script).
+- `products`: A Playwright locator targeting elements with the class `.card-body`.
+
+---
+
+4. Navigating to the Website:
+
+```javascript
+await page.goto("https://rahulshettyacademy.com/client");
+```
+- `goto`: Opens the specified URL in the browser.
+
+---
+
+5. Filling Login Credentials:
+
+```javascript
+await page.locator("#userEmail").fill(email);
+await page.locator("#userPassword").type("Iamking@000");
+await page.locator("[value='Login']").click();
+```
+- Locate and Interact:
+  - `#userEmail`: A text box for entering the email.
+  - `#userPassword`: A password field for entering the password.
+  - `[value='Login']`: The login button, identified by its `value` attribute.
+
+---
+
+6. Waiting for Network Stability: 
+
+```javascript
+await page.waitForLoadState('networkidle');
+```
+- `networkidle`: Ensures all network requests are finished, preventing interactions before the page is fully loaded.
+
+---
+
+7. Waiting for Elements:
+
+```javascript
+await page.locator(".card-body b").first().waitFor();
+```
+- Waits for the first `<b>` tag within `.card-body` elements to be visible/available.
+
+---
+
+8. Extracting Titles:
+
+```javascript
+const titles = await page.locator(".card-body b").allTextContents();
+console.log(titles);
+```
+- `.allTextContents()`**: Fetches all text content from `<b>` tags inside `.card-body`.
+- `console.log(titles)`**: Logs the array of text values to the console.
+
+---
+
+
+What This Test Does
+1. Navigates to the login page.
+2. Logs in with specified credentials.
+3. Waits for the dashboard or product page to load.
+4. Extracts and prints the titles of products.
+
+---

@@ -1,0 +1,135 @@
+const {test, expect} = require('@playwright/test');
+
+test.only("Handling dropdown options", async function({browser}){
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    console.log(page.title());
+    await page.locator("[name='username']").fill("rahulshettyacademy");
+    await page.locator("[type='password']").fill("learning");
+    await page.locator(".radiotextsty").last().click();
+    await page.locator("#okayBtn").click();
+    await page.locator("select.form-control").selectOption("consult");
+    console.log(await page.locator(".radiotextsty").last().isChecked());
+    await expect(page.locator(".radiotextsty").last()).toBeChecked();
+    await page.locator("[name='terms']").click();
+    await expect(page.locator("[name='terms']")).toBeChecked();
+    await page.locator("[name='terms']").uncheck();
+    expect(await page.locator("[name='terms']").isChecked()).toBeFalsy();
+    await expect(page.locator("[href*='documents-request']")).toHaveAttribute("class", "blinkingText");
+    // await page.pause();
+});
+
+Let's break down the Playwright test code step by step.
+
+1. Test Initialization:
+
+```javascript
+const {test, expect} = require('@playwright/test');
+```
+- Here, you're importing Playwright's `test` and `expect` modules, which are used to write tests and assertions.
+
+2. Test Declaration:
+
+```javascript
+test.only("Handling dropdown options", async function({browser}){
+```
+- `test.only` is used to run only this specific test. It helps you isolate this test and skip others.
+- This test is named "Handling dropdown options," and it runs an asynchronous function with `{browser}` being passed as an argument.
+
+3. Create Context and Page:
+
+```javascript
+    const context = await browser.newContext();
+    const page = await context.newPage();
+```
+- `newContext()` creates a new browser context, which is like a new session. It ensures tests are isolated (useful for things like login sessions, cookies, etc.).
+- `newPage()` opens a new tab in the browser.
+
+4. Go to the Website:
+
+```javascript
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    console.log(page.title());
+```
+- The test navigates to the login page URL provided.
+- `console.log(page.title())` prints the title of the page in the console, helping you confirm the page is loaded.
+
+5. Filling in the Username and Password:
+
+```javascript
+    await page.locator("[name='username']").fill("rahulshettyacademy");
+    await page.locator("[type='password']").fill("learning");
+```
+- The test locates the username and password fields by their `name` and `type` attributes and fills them with the provided credentials.
+
+6. Selecting a Radio Button:
+
+```javascript
+    await page.locator(".radiotextsty").last().click();
+```
+- This locates the last radio button with the class `.radiotextsty` and clicks on it.
+
+7. Clicking on "Okay" Button:
+
+```javascript
+    await page.locator("#okayBtn").click();
+```
+- The test clicks the button with the ID `#okayBtn`, which likely triggers a modal or a confirmation.
+
+8. Handling Dropdown (Select Option):
+
+```javascript
+    await page.locator("select.form-control").selectOption("consult");
+```
+- This locates a `<select>` dropdown with the class `.form-control` and selects the option with the value `"consult"`.
+
+9. Checking the Radio Button State:
+
+```javascript
+    console.log(await page.locator(".radiotextsty").last().isChecked());
+```
+- It checks whether the last radio button with the class `.radiotextsty` is checked and logs the result in the console.
+
+```javascript
+    await expect(page.locator(".radiotextsty").last()).toBeChecked();
+```
+- This asserts that the last radio button with the class `.radiotextsty` should be checked. This will throw an error if the radio button isn't checked.
+
+10. Clicking and Verifying the "Terms" Checkbox:
+
+```javascript
+    await page.locator("[name='terms']").click();
+    await expect(page.locator("[name='terms']")).toBeChecked();
+```
+- The test clicks on the checkbox with the `name` attribute `terms` and asserts that it should be checked after the click.
+
+11. Unchecking and Verifying the "Terms" Checkbox:
+
+```javascript
+    await page.locator("[name='terms']").uncheck();
+    expect(await page.locator("[name='terms']").isChecked()).toBeFalsy();
+```
+- The checkbox with the `name='terms'` is unchecked.
+- `expect()` is used to assert that the checkbox is now unchecked by verifying that `isChecked()` returns `false`.
+
+12. Verify Attribute of Link:
+
+```javascript
+    await expect(page.locator("[href*='documents-request']")).toHaveAttribute("class", "blinkingText");
+```
+- This locates a link that contains `documents-request` in its `href` attribute and asserts that the link has the class `blinkingText`.
+
+13. Commented-out Code:
+
+```javascript
+    // await page.pause();
+```
+- This line is commented out. If it were active, it would pause the test, allowing you to inspect the state of the page manually before continuing the test.
+
+---
+
+Summary:
+
+- This Playwright test performs actions like navigating to a page, filling out forms, interacting with elements like radio buttons and checkboxes, selecting a dropdown option, and validating element states and attributes.
+- The use of `expect()` is essential for verifying the correctness of the interactions, ensuring that elements are in the expected state after actions are performed.
